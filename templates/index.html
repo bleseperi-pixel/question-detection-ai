@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Question Predictor | College Management</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1>Question Predictor</h1>
+      <p>Paste the questions submitted by staff, find the ones asked most often, and generate a question paper.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card" aria-labelledby="input-heading">
+      <h2 id="input-heading">1. Staff question input</h2>
+      <form id="analyze-form" novalidate>
+        <label for="questions">Questions (one per line). Marks can be written as "(5 marks)" or "[2 marks]".</label>
+        <textarea id="questions" name="questions" rows="10"
+          placeholder="1. Explain the process of normalization in DBMS (5 marks)&#10;2. Define primary key (2 marks)&#10;3. Explain normalization process in DBMS"></textarea>
+
+        <div class="grid">
+          <div>
+            <label for="title">Paper title</label>
+            <input id="title" name="title" value="Internal Examination">
+          </div>
+          <div>
+            <label for="subject">Subject</label>
+            <input id="subject" name="subject" placeholder="e.g. Database Management Systems">
+          </div>
+        </div>
+
+        <fieldset>
+          <legend>Paper pattern (set 0 to leave a mark type out)</legend>
+          <div class="grid">
+            <div>
+              <label for="two-count">Number of 2-mark questions</label>
+              <input type="number" id="two-count" min="0" max="50" value="5">
+            </div>
+            <div>
+              <label for="five-count">Number of 5-mark questions</label>
+              <input type="number" id="five-count" min="0" max="50" value="0">
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="grid">
+          <div>
+            <label for="threshold">Similarity threshold: <output id="threshold-out">0.60</output></label>
+            <input type="range" id="threshold" min="0.2" max="0.95" step="0.05" value="0.6">
+            <p class="hint">Lower values group more loosely worded questions together.</p>
+          </div>
+          <div>
+            <label for="top-n">Predictions to show</label>
+            <input type="number" id="top-n" min="1" max="50" value="10">
+          </div>
+        </div>
+
+        <button type="submit" id="submit-btn">Analyze and generate paper</button>
+        <p id="form-error" class="error" role="alert" hidden></p>
+      </form>
+    </section>
+
+    <section id="results" class="card" aria-labelledby="results-heading" hidden>
+      <h2 id="results-heading">2. Predicted repeated questions</h2>
+      <div id="stats" class="stats"></div>
+      <ol id="predictions" class="prediction-list"></ol>
+    </section>
+
+    <section id="paper-section" class="card" aria-labelledby="paper-heading" hidden>
+      <div class="paper-toolbar">
+        <h2 id="paper-heading">3. Generated question paper</h2>
+        <button type="button" id="print-btn" class="secondary">Print or save as PDF</button>
+      </div>
+      <div id="warnings"></div>
+      <article id="paper" class="paper"></article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Predictions are based on how often questions repeat in the staff input. Always review the generated paper before use.</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
